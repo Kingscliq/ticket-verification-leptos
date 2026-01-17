@@ -1,0 +1,20 @@
+[package]
+name = "ticket-verifier"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+leptos = { version = "0.6", features = ["csr"] }
+console_error_panic_hook = "0.1"
+console_log = "1"
+
+log = "0.4"
+rqrr = "0.6"
+image = "0.24"
+gloo-file = { version = "0.3", features = ["futures"] }
+gloo-storage = "0.3"
+wasm-bindgen-futures = "0.4"
+reqwest = { version = "0.11", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+web-sys = { version = "0.3", features = ["console"] }

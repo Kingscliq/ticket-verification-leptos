@@ -1,0 +1,13 @@
+[build]
+target = "index.html"
+
+[watch]
+ignore = ["./.git", "./target"]
+
+[serve]
+port = 8080
+open = false
+
+
+
+
