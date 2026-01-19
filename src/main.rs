@@ -12,9 +12,11 @@ use components::scanner::Scanner;
 use components::result::TicketStatus;
 use components::login::Login;
 use components::reset_password::ResetPassword;
+use components::event_selection::EventSelection;
 
 #[derive(Clone, Copy, PartialEq)]
 enum AppView {
+    EventSelection,
     Scanner,
     ResetPassword,
 }
@@ -35,8 +37,10 @@ fn App() -> impl IntoView {
     let (is_authenticated, set_authenticated) = create_signal(false);
     let (auth_token, set_auth_token) = create_signal(String::new());
 
-    let (current_view, set_current_view) = create_signal(AppView::Scanner);
+    let (current_view, set_current_view) = create_signal(AppView::EventSelection);
     let (ticket_status, set_ticket_status) = create_signal(TicketStatus::Idle);
+    let (selected_event_id, set_selected_event_id) = create_signal(String::new());
+    let (selected_event_title, set_selected_event_title) = create_signal(String::new());
 
     // Check for existing token on load
     create_effect(move |_| {
@@ -108,9 +112,26 @@ fn App() -> impl IntoView {
              if must_reset {
                  set_current_view.set(AppView::ResetPassword);
              } else {
-                 set_current_view.set(AppView::Scanner);
+                 set_current_view.set(AppView::EventSelection);
              }
         }
+    };
+
+    let on_event_select = move |id: String, title: String| {
+        set_selected_event_id.set(id);
+        set_selected_event_title.set(title);
+        set_current_view.set(AppView::Scanner);
+    };
+
+    let on_logout = move |_| {
+        let _ = LocalStorage::delete("auth_token");
+        let _ = LocalStorage::delete("must_reset_password");
+        set_authenticated.set(false);
+        set_auth_token.set(String::new());
+        set_ticket_status.set(TicketStatus::Idle);
+        set_selected_event_id.set(String::new());
+        set_selected_event_title.set(String::new());
+        set_current_view.set(AppView::EventSelection);
     };
 
     view! {
@@ -119,6 +140,15 @@ fn App() -> impl IntoView {
         } else {
             view! {
                 {move || match current_view.get() {
+                    AppView::EventSelection => view! {
+                        <Layout>
+                            <EventSelection 
+                                token=auth_token.get()
+                                on_select=on_event_select
+                                on_logout=Callback::new(on_logout)
+                            />
+                        </Layout>
+                    }.into_view(),
                     AppView::ResetPassword => view! {
                         <ResetPassword 
                             token=auth_token.get() 

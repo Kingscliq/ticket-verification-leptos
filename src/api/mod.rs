@@ -50,6 +50,22 @@ struct ApiErrorResponse {
     message: String,
 }
 
+#[derive(Deserialize, Debug, Clone)]
+pub struct Listing {
+    pub id: String,
+    pub title: String,
+    #[serde(rename = "type")]
+    pub listing_type: String,
+    #[serde(default)]
+    pub date: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct ListingsResponse {
+    pub success: bool,
+    pub data: Vec<Listing>,
+}
+
 pub async fn verify_ticket(ticket_code: String, token: String) -> Result<VerifyResponse, String> {
     let client = Client::new();
     // Using the Base URL provided by user
@@ -192,4 +208,27 @@ pub async fn reset_password(req: ResetPasswordRequest, token: String) -> Result<
     }
 
     Ok(())
+}
+
+pub async fn fetch_listings(token: String) -> Result<Vec<Listing>, String> {
+    let client = Client::new();
+    let url = format!("{}/v1/vendor/listings", API_BASE_URL);
+
+    let res = client
+        .get(&url)
+        .header("Authorization", format!("Bearer {}", token))
+        .send()
+        .await
+        .map_err(|e| format!("Request failed: {}", e))?;
+
+    let status = res.status();
+    
+    if status.is_success() {
+        let response = res.json::<ListingsResponse>().await
+            .map_err(|e| format!("Failed to parse response: {}", e))?;
+        Ok(response.data)
+    } else {
+        let error_text = res.text().await.unwrap_or_else(|_| "Unknown error".to_string());
+        Err(format!("Failed to fetch listings: {}", error_text))
+    }
 }

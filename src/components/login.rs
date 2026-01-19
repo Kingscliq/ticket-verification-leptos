@@ -87,14 +87,6 @@ where F: Fn(bool) + 'static + Clone
                              </button>
                          </div>
                      </div>
-                     
-                     <div class="text-right">
-                         <a href="#" class="forgot-link text-sm text-primary hover:underline"
-                            on:click=move |_| set_info_msg.set("Please contact the administrator to reset your password.".to_string())
-                         >
-                            "Forgot password?"
-                         </a>
-                     </div>
 
                      {move || {
                          let msg = info_msg.get();
