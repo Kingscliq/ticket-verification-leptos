@@ -37,7 +37,7 @@ fn App() -> impl IntoView {
     let (is_authenticated, set_authenticated) = create_signal(false);
     let (auth_token, set_auth_token) = create_signal(String::new());
 
-    let (current_view, set_current_view) = create_signal(AppView::EventSelection);
+    let (current_view, set_current_view) = create_signal(AppView::Scanner);
     let (ticket_status, set_ticket_status) = create_signal(TicketStatus::Idle);
     let (selected_event_id, set_selected_event_id) = create_signal(String::new());
     let (selected_event_title, set_selected_event_title) = create_signal(String::new());
@@ -112,7 +112,7 @@ fn App() -> impl IntoView {
              if must_reset {
                  set_current_view.set(AppView::ResetPassword);
              } else {
-                 set_current_view.set(AppView::EventSelection);
+                 set_current_view.set(AppView::Scanner);
              }
         }
     };
