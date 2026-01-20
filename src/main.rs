@@ -7,17 +7,24 @@ mod pages;
 mod state;
 
 use components::layout::Layout;
-// use components::loading::Loading; 
+// use components::loading::Loading;
 use components::scanner::Scanner;
 use components::result::TicketStatus;
 use components::login::Login;
 use components::reset_password::ResetPassword;
+use components::event_selection::EventSelection;
 
-#[derive(Clone, Copy, PartialEq)]
-enum AppView {
+#[derive(Clone, PartialEq)]
+pub enum AppView {
+    EventSelection,
     Scanner,
     ResetPassword,
+    VerifiedTickets,
+    TicketDetails(String),
 }
+
+use components::verified_tickets::VerifiedTicketsList;
+use components::verified_details::VerifiedTicketDetails;
 
 fn main() {
     console_error_panic_hook::set_once();
@@ -35,8 +42,10 @@ fn App() -> impl IntoView {
     let (is_authenticated, set_authenticated) = create_signal(false);
     let (auth_token, set_auth_token) = create_signal(String::new());
 
-    let (current_view, set_current_view) = create_signal(AppView::Scanner);
+    let (current_view, set_current_view) = create_signal(AppView::EventSelection);
     let (ticket_status, set_ticket_status) = create_signal(TicketStatus::Idle);
+    let (selected_event_id, set_selected_event_id) = create_signal(String::new());
+    let (selected_event_title, set_selected_event_title) = create_signal(String::new());
 
     // Check for existing token on load
     create_effect(move |_| {
@@ -108,9 +117,26 @@ fn App() -> impl IntoView {
              if must_reset {
                  set_current_view.set(AppView::ResetPassword);
              } else {
-                 set_current_view.set(AppView::Scanner);
+                 set_current_view.set(AppView::EventSelection);
              }
         }
+    };
+
+    let on_event_select = move |id: String, title: String| {
+        set_selected_event_id.set(id);
+        set_selected_event_title.set(title);
+        set_current_view.set(AppView::Scanner);
+    };
+
+    let on_logout = move |_| {
+        let _ = LocalStorage::delete("auth_token");
+        let _ = LocalStorage::delete("must_reset_password");
+        set_authenticated.set(false);
+        set_auth_token.set(String::new());
+        set_ticket_status.set(TicketStatus::Idle);
+        set_selected_event_id.set(String::new());
+        set_selected_event_title.set(String::new());
+        set_current_view.set(AppView::EventSelection);
     };
 
     view! {
@@ -119,6 +145,15 @@ fn App() -> impl IntoView {
         } else {
             view! {
                 {move || match current_view.get() {
+                    AppView::EventSelection => view! {
+                        <Layout>
+                            <EventSelection 
+                                token=auth_token.get()
+                                on_select=on_event_select
+                                on_logout=Callback::new(on_logout)
+                            />
+                        </Layout>
+                    }.into_view(),
                     AppView::ResetPassword => view! {
                         <ResetPassword 
                             token=auth_token.get() 
@@ -135,10 +170,11 @@ fn App() -> impl IntoView {
                         <Layout>
                             <Scanner 
                                 on_scan=handle_scan 
-                                on_reset=move |_| set_ticket_status.set(TicketStatus::Idle) 
+                                on_reset=move |_| set_ticket_status.set(TicketStatus::Idle)
+                                on_back=move |_| set_current_view.set(AppView::EventSelection)
+                                on_history=move |_| set_current_view.set(AppView::VerifiedTickets)
                                 status=move || ticket_status.get() 
                             />
-                            
                             <div class="scanner-footer">
                                 <a href="#" class="footer-link"
                                    on:click=move |ev| {
@@ -163,7 +199,24 @@ fn App() -> impl IntoView {
                             </div>
                         </Layout>
                     }.into_view(),
+                    AppView::VerifiedTickets => view! {
+                        <Layout>
+                            <VerifiedTicketsList
+                                on_back=Callback::from(move |_| set_current_view.set(AppView::Scanner))
+                                on_select_ticket=move |id| set_current_view.set(AppView::TicketDetails(id))
+                            />
+                        </Layout>
+                    }.into_view(),
+                    AppView::TicketDetails(id) => view! {
+                        <Layout>
+                            <VerifiedTicketDetails
+                                ticket_id=id
+                                on_back=move || set_current_view.set(AppView::VerifiedTickets)
+                            />
+                        </Layout>
+                    }.into_view(),
                 }}
+
             }.into_view()
         }}
     }

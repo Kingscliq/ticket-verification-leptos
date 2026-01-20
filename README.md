@@ -1,6 +1,6 @@
 # Ticket Verification App (Leptos + QR Scanner)
 
-A **static, WASM-powered ticket verification frontend** built with **Leptos (Rust)** that integrates with an existing **NestJS public verification API**.  
+A **static, WASM-powered ticket verification frontend** built with **Leptos (Rust)** that integrates with an existing **NestJS API**.  
 The app scans QR codes using the device camera, sends the decoded ticket code to a backend API, and displays the verification result in real time.
 
 ---
