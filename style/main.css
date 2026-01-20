@@ -752,3 +752,240 @@ body {
     background: var(--red-50);
     border-color: var(--red-600);
 }
+
+/* Verified Tickets List Styles */
+.verified-list-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.verified-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.verified-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin: 0;
+}
+
+.btn-back {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--gray-600);
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0;
+}
+
+.verified-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.verified-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.verified-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.verified-card-status {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.verified-card-status[data-status="valid"] {
+    background-color: #ecfdf5;
+    color: #059669;
+}
+
+.verified-card-status[data-status="invalid"] {
+    background-color: #fef2f2;
+    color: #dc2626;
+}
+
+.verified-card-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.verified-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin: 0 0 0.25rem 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.verified-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    margin-bottom: 0.25rem;
+}
+
+.verified-code {
+    font-family: monospace;
+    background: var(--gray-100);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.verified-type {
+    font-size: 0.8rem;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.verified-arrow {
+    color: var(--gray-400);
+}
+
+/* Verified Ticket Details Styles */
+.verified-details-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.ticket-details-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.details-status {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.details-status[data-status="valid"] {
+    color: #059669;
+}
+
+.details-status[data-status="invalid"] {
+    color: #dc2626;
+}
+
+.details-status span {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.details-group {
+    margin-bottom: 1.5rem;
+}
+
+.details-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--gray-500);
+    margin-bottom: 0.25rem;
+}
+
+.details-value {
+    font-size: 1rem;
+    color: var(--gray-900);
+    font-weight: 500;
+    margin: 0;
+}
+
+.details-value.large {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.details-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.ticket-type-badge {
+    display: inline-block;
+    background: var(--primary-color-light);
+    color: var(--primary-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Scanner Header Update */
+.scanner-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.scanner-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    color: var(--gray-600);
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.btn-icon:hover {
+    background-color: var(--gray-100);
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.btn-text:hover {
+    text-decoration: underline;
+}

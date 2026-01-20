@@ -5,3 +5,5 @@ pub mod result;
 pub mod login;
 pub mod reset_password;
 pub mod event_selection;
+pub mod verified_tickets;
+pub mod verified_details;

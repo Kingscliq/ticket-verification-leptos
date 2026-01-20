@@ -60,6 +60,17 @@ pub struct Listing {
     pub date: String,
 }
 
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
+pub struct VerifiedTicket {
+    pub id: String,
+    pub ticket_code: String,
+    pub event_name: String,
+    pub attendee_name: String,
+    pub ticket_type: String,
+    pub verified_at: String, // String for simplicity in mock
+    pub status: String, // "Valid", "Invalid"
+}
+
 #[derive(Deserialize, Debug)]
 pub struct ListingsResponse {
     pub success: bool,

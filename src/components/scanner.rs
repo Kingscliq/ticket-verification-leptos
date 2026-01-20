@@ -68,6 +68,10 @@ pub fn Scanner<F>(
     on_scan: Callback<String>,
     #[prop(into)]
     on_reset: Callback<()>,
+    #[prop(into)]
+    on_back: Callback<()>,
+    #[prop(into)]
+    on_history: Callback<()>,
     status: F,
 ) -> impl IntoView 
 where F: Fn() -> TicketStatus + 'static + Clone
@@ -147,6 +151,20 @@ where F: Fn() -> TicketStatus + 'static + Clone
 
     view! {
         <div class="input-section card">
+            <div class="scanner-header">
+                <div class="scanner-actions">
+                    <button class="btn-icon" on:click=move |_| on_back.call(()) title="Back to Events">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m15 18-6-6 6-6"/>
+                        </svg>
+                    </button>
+                    <button class="btn-text" on:click=move |_| on_history.call(())>
+                        "History"
+                    </button>
+                </div>
+                <h2>"Scan Ticket"</h2>
+                <p>"Point your camera at the QR code"</p>
+            </div>
             <div class="card-content">
                 // Feedback Alerts
                 {move || match status_memo.get() {

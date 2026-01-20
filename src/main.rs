@@ -7,19 +7,24 @@ mod pages;
 mod state;
 
 use components::layout::Layout;
-// use components::loading::Loading; 
+// use components::loading::Loading;
 use components::scanner::Scanner;
 use components::result::TicketStatus;
 use components::login::Login;
 use components::reset_password::ResetPassword;
 use components::event_selection::EventSelection;
 
-#[derive(Clone, Copy, PartialEq)]
-enum AppView {
+#[derive(Clone, PartialEq)]
+pub enum AppView {
     EventSelection,
     Scanner,
     ResetPassword,
+    VerifiedTickets,
+    TicketDetails(String),
 }
+
+use components::verified_tickets::VerifiedTicketsList;
+use components::verified_details::VerifiedTicketDetails;
 
 fn main() {
     console_error_panic_hook::set_once();
@@ -165,10 +170,11 @@ fn App() -> impl IntoView {
                         <Layout>
                             <Scanner 
                                 on_scan=handle_scan 
-                                on_reset=move |_| set_ticket_status.set(TicketStatus::Idle) 
+                                on_reset=move |_| set_ticket_status.set(TicketStatus::Idle)
+                                on_back=move |_| set_current_view.set(AppView::EventSelection)
+                                on_history=move |_| set_current_view.set(AppView::VerifiedTickets)
                                 status=move || ticket_status.get() 
                             />
-                            
                             <div class="scanner-footer">
                                 <a href="#" class="footer-link"
                                    on:click=move |ev| {
@@ -193,7 +199,24 @@ fn App() -> impl IntoView {
                             </div>
                         </Layout>
                     }.into_view(),
+                    AppView::VerifiedTickets => view! {
+                        <Layout>
+                            <VerifiedTicketsList
+                                on_back=Callback::from(move |_| set_current_view.set(AppView::Scanner))
+                                on_select_ticket=move |id| set_current_view.set(AppView::TicketDetails(id))
+                            />
+                        </Layout>
+                    }.into_view(),
+                    AppView::TicketDetails(id) => view! {
+                        <Layout>
+                            <VerifiedTicketDetails
+                                ticket_id=id
+                                on_back=move || set_current_view.set(AppView::VerifiedTickets)
+                            />
+                        </Layout>
+                    }.into_view(),
                 }}
+
             }.into_view()
         }}
     }
