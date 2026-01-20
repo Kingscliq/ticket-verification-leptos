@@ -105,6 +105,18 @@ where
                                     let title = listing.title.clone();
                                     let title_for_display = title.clone();
                                     let listing_type = listing.listing_type.clone();
+                                    
+                                    // Capitalize first letter
+                                    let type_display = if !listing_type.is_empty() {
+                                        let mut c = listing_type.chars();
+                                        match c.next() {
+                                            None => String::new(),
+                                            Some(f) => f.to_uppercase().collect::<String>() + c.as_str(),
+                                        }
+                                    } else {
+                                        String::new()
+                                    };
+
                                     let date = listing.date.clone();
                                     view! {
                                         <div 
@@ -116,7 +128,7 @@ where
                                             <div class="event-card-content">
                                                 <h3 class="event-card-title">{title_for_display.clone()}</h3>
                                                 <div class="event-card-meta">
-                                                    <span class="event-card-type">{listing_type.clone()}</span>
+                                                    <span class="event-card-type">{type_display}</span>
                                                     {(!date.is_empty()).then(|| view! {
                                                         <span class="event-card-date">{date.clone()}</span>
                                                     })}
